@@ -1,0 +1,40 @@
+{
+  "type": "library",
+  "name": "zero-to-prod/validate-email",
+  "description": "Validates a url",
+  "keywords": [
+    "validate url",
+    "zero-to-prod",
+    "validate-email"
+  ],
+  "homepage": "https://github.com/zero-to-prod/validate-email",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Smith",
+      "email": "dave0016@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "zero-to-prod/regex-email": "^71.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zerotoprod\\ValidateEmail\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "suggest": {
+    "zero-to-prod/transformable": "Transform a class into different types.",
+    "zero-to-prod/data-model-factory": "Factories for a DataModel.",
+    "zero-to-prod/data-model": "Type-safe DTOs"
+  }
+}
