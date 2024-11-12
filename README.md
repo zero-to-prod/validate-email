@@ -21,12 +21,8 @@ composer require zero-to-prod/validate-email
 
 ## Usage
 
-Returns true if the URL is valid.
-
-If you would like to specify the URL protocols that should be considered valid,
-pass an array of protocols.
+Returns true if the value is a valid email.
 
 ```php
-Zerotoprod\ValidateEmail\ValidateEmail::isUrl('https://www.example.com')
-Zerotoprod\ValidateEmail\ValidateEmail::isUrl('https://www.example.com', ['https', 'udp'])
+Zerotoprod\ValidateEmail\ValidateEmail::isEmail('john@example.com')
 ```
