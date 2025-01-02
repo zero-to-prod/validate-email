@@ -9,7 +9,7 @@
 [![Packagist Version](https://img.shields.io/packagist/v/zero-to-prod/validate-email?color=f28d1a)](https://packagist.org/packages/zero-to-prod/validate-email)
 [![License](https://img.shields.io/packagist/l/zero-to-prod/validate-email?color=pink)](https://github.com/zero-to-prod/validate-email/blob/main/LICENSE.md)
 [![wakatime](https://wakatime.com/badge/github/zero-to-prod/validate-email.svg)](https://wakatime.com/badge/github/zero-to-prod/validate-email)
-[![Hits-of-Code](https://hitsofcode.com/github/zero-to-prod//validate-email?branch=main)](https://hitsofcode.com/github/zero-to-prod//validate-email/view?branch=main)
+[![Hits-of-Code](https://hitsofcode.com/github/zero-to-prod/validate-email?branch=main)](https://hitsofcode.com/github/zero-to-prod/validate-email/view?branch=main)
 
 Validates an email.
 
