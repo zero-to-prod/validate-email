@@ -8,6 +8,13 @@
     "validate-email"
   ],
   "homepage": "https://github.com/zero-to-prod/validate-email",
+  "support": {
+    "email": "dave0016@gmail.com",
+    "issues": "https://github.com/zero-to-prod/validate-email/issues",
+    "source": "https://github.com/zero-to-prod/validate-email",
+    "docs": "https://zero-to-prod.github.io/validate-email/",
+    "security": "https://github.com/zero-to-prod/validate-email/blob/main/SECURITY.md"
+  },
   "license": "MIT",
   "readme": "./README.md",
   "authors": [
