@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           ref: ${{ github.head_ref || github.ref }}
           fetch-depth: 0
 
@@ -150,13 +150,28 @@ jobs:
 
       - name: Commit and push changes (if any)
         run: |
-          set -e
+          set -euo pipefail
+          
+          # Configure git user for commits
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          
+          # Stage all changes
           git add -A
+          
+          # Check if there are any changes to commit
           if ! git diff --cached --quiet; then
-            git commit -m "Update docblocks with @link annotations" --no-verify
+            echo "Changes detected, committing docblock updates..."
+            
+            # Commit without skip-ci to allow other workflows to run
+            git commit -m "Update docblocks with @link annotations" \
+                       --no-verify
+            
+            # Push changes - using PAT_TOKEN if available to trigger workflows properly
             git push
+            
+            echo "Docblock updates committed and pushed successfully."
+            echo "Other workflows will run on the new commit."
           else
             echo "No changes to commit."
           fi
