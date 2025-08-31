@@ -17,9 +17,9 @@
 - [Introduction](#introduction)
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Usage](#usage)
 - [Documentation Publishing](#documentation-publishing)
   - [Automatic Documentation Publishing](#automatic-documentation-publishing)
+- [Usage](#usage)
 - [Local Development](./LOCAL_DEVELOPMENT.md)
 - [Contributing](#contributing)
 
@@ -40,14 +40,6 @@ composer require zero-to-prod/validate-email
 ```
 
 This will add the package to your project’s dependencies and create an autoloader entry for it.
-
-## Usage
-
-Returns true if the value is a valid email.
-
-```php
-Zerotoprod\ValidateEmail\ValidateEmail::isEmail('john@example.com')
-```
 
 ## Documentation Publishing
 
@@ -80,6 +72,14 @@ You can automatically publish documentation by adding the following to your `com
     ]
   }
 }
+```
+
+## Usage
+
+Returns true if the value is a valid email.
+
+```php
+Zerotoprod\ValidateEmail\ValidateEmail::isEmail('john@example.com')
 ```
 
 ## Contributing
