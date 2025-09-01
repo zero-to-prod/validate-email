@@ -31,7 +31,7 @@ jobs:
           execute_docblock_annotator() {
               local file_path="$1"
               shift
-              
+          
               docker run \
                   --rm \
                   --volume "$(pwd):/app/run" \
@@ -47,7 +47,7 @@ jobs:
                   echo "Error: jq is required but not installed." >&2
                   return 1
               fi
-              
+          
               if [[ ! -f "${COMPOSER_JSON}" ]]; then
                   echo "Error: ${COMPOSER_JSON} not found in current directory." >&2
                   return 1
@@ -57,32 +57,44 @@ jobs:
           # Extract the main PHP class file path from composer.json PSR-4 autoload configuration
           get_main_class_file() {
               local namespace directory class_name php_file
-              
+          
               namespace=$(jq -r '.autoload."psr-4" | keys[0] // empty' "${COMPOSER_JSON}")
               directory=$(jq -r --arg ns "$namespace" '.autoload."psr-4"[$ns] // empty' "${COMPOSER_JSON}")
-              
+          
               if [[ -z "$namespace" || -z "$directory" ]]; then
                   echo "Error: Could not extract PSR-4 namespace or directory from ${COMPOSER_JSON}." >&2
                   return 1
               fi
-              
+          
               # Remove trailing backslash from namespace
               namespace="${namespace%\\}"
-              
+          
               # Extract class name from namespace (last segment)
               class_name=$(echo "$namespace" | awk -F'\\\\' '{print $NF}')
-              
+          
               # Construct PHP file path
               php_file="${directory}${class_name}.php"
-              
+          
               # Convert backslashes to forward slashes for file path
               php_file=$(echo "$php_file" | sed 's/\\/\//g')
-              
+          
               if [[ ! -f "$php_file" ]]; then
-                  echo "Error: Main class file '$php_file' not found." >&2
-                  return 1
+                  echo "Warning: Main class file '$php_file' not found. Trying to find an alternative..." >&2
+          
+                  # Try to find the first PHP class file in the directory
+                  local alternative_file
+                  alternative_file=$(find "$directory" -maxdepth 1 -name "*.php" -type f | head -1)
+          
+                  if [[ -n "$alternative_file" ]]; then
+                      echo "Using alternative file: $alternative_file" >&2
+                      echo "$alternative_file"
+                      return 0
+                  else
+                      echo "Error: No PHP class files found in directory '$directory'." >&2
+                      return 1
+                  fi
               fi
-              
+          
               echo "$php_file"
           }
           
@@ -90,12 +102,12 @@ jobs:
           get_package_description() {
               local description
               description=$(jq -r '.description // empty' "${COMPOSER_JSON}")
-              
+          
               if [[ -z "$description" ]]; then
                   echo "Error: Could not extract package description from ${COMPOSER_JSON}." >&2
                   return 1
               fi
-              
+          
               echo "$description"
           }
           
@@ -103,45 +115,45 @@ jobs:
           get_package_homepage() {
               local homepage
               homepage=$(jq -r '.homepage // empty' "${COMPOSER_JSON}")
-              
+          
               if [[ -z "$homepage" ]]; then
                   echo "Error: Could not extract package homepage from ${COMPOSER_JSON}." >&2
                   return 1
               fi
-              
+          
               echo "$homepage"
           }
           
           # Update docblock with package description
           update_docblock_with_description() {
               local php_file description
-              
+          
               php_file=$(get_main_class_file) || return 1
               description=$(get_package_description) || return 1
-              
+          
               execute_docblock_annotator "$php_file" "$description" "--statements=class"
           }
           
           # Update docblock with homepage link
           update_docblock_with_link() {
               local php_file homepage
-              
+          
               php_file=$(get_main_class_file) || return 1
               homepage=$(get_package_homepage) || return 1
-              
+          
               execute_docblock_annotator "$php_file" "@link $homepage"
           }
           
           # Main function to update all docblocks
           update_package_docblocks() {
               validate_dependencies || return 1
-              
+          
               echo "Updating docblocks with package description..."
               update_docblock_with_description || return 1
-              
+          
               echo "Updating docblocks with homepage link..."
               update_docblock_with_link || return 1
-              
+          
               echo "Docblock updates completed successfully."
           }
           
@@ -162,14 +174,14 @@ jobs:
           # Check if there are any changes to commit
           if ! git diff --cached --quiet; then
             echo "Changes detected, committing docblock updates..."
-            
+          
             # Commit without skip-ci to allow other workflows to run
             git commit -m "Update docblocks with @link annotations" \
                        --no-verify
-            
+          
             # Push changes - using PAT_TOKEN if available to trigger workflows properly
             git push
-            
+          
             echo "Docblock updates committed and pushed successfully."
             echo "Other workflows will run on the new commit."
           else
